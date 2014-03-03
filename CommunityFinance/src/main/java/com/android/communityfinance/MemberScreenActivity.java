@@ -128,8 +128,6 @@ public class MemberScreenActivity extends FragmentActivity implements AdapterVie
 
         EditText contactEditor=(EditText) view.findViewById(R.id.edit_member_contact);
         if(contactEditor !=null) contactEditor.setText(memberToPopulate.ContactInfo);
-
-        view.invalidate();
     }
 
     // Activity that will be called in case screen is not enough to fit both fragments
