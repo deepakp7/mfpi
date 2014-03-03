@@ -1,0 +1,13 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/layout_member_details_container"
+    tools:context="com.android.communityfinance.MemberDetailsFragment">
+
+    <include layout="@layout/view_member_details" android:id="@+id/layout_member_details"/>
+
+    <Button android:text="Save" android:id="@+id/button_save_member"
+        android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/layout_member_details"/>
+</RelativeLayout>
