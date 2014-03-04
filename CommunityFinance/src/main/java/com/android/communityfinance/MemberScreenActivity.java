@@ -1,6 +1,7 @@
 package com.android.communityfinance;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Handler;
 
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,30 +25,24 @@ import android.widget.Toast;
 import com.android.communityfinance.domain.Member;
 
 
-public class MemberScreenActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
+public class MemberScreenActivity extends FragmentActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
 
+    public static final int SAVE_MEMBER_DETAILS = 0;
+
+    DatabaseHandler dbHandler;
     ArrayList<Member> members;
-    MemberDetailsFragment details_fragment;
+    ViewHelper viewHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_screen);
 
+        dbHandler = new DatabaseHandler(this);
+        members = dbHandler.getAllMembers();
 
-        members = new ArrayList<Member>();
-
-        Member member1 = new Member();
-        member1.FirstName="Shashank";
-        member1.LastName="Singh";
-        member1.ContactInfo ="shashanksingh28@gmail.com";
-        members.add(member1);
-
-        Member member2 = new Member();
-        member2.FirstName="Sidharth";
-        member2.LastName="Sharma";
-        member2.ContactInfo ="sidharth.sharma@gmail.com";
-        members.add(member2);
+        Button addMemberButton = (Button) findViewById(R.id.button_add_member);
+        addMemberButton.setOnClickListener(this);
 
         ListView lv = (ListView) findViewById(R.id.listview_member_names);
         ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,members);
@@ -58,8 +54,9 @@ public class MemberScreenActivity extends FragmentActivity implements AdapterVie
     @Override protected void onResume()
     {
         super.onResume();
-        Log.d("CALLING POPULATE","For "+members.get(0).FirstName);
-        PopulateDetails(findViewById(R.id.layout_member_details_container),members.get(0));
+        members = dbHandler.getAllMembers();
+        if(members.size() > 0)
+            viewHelper.populateMemberDetailsToView(findViewById(R.id.layout_member_details_container), members.get(0));
     }
 
     @Override
@@ -94,11 +91,11 @@ public class MemberScreenActivity extends FragmentActivity implements AdapterVie
                 intent.putExtra("FirstName",member.FirstName);
                 intent.putExtra("LastName",member.LastName);
                 intent.putExtra("ContactInfo",member.ContactInfo);
-                startActivity(intent);
+                startActivityForResult(intent, SAVE_MEMBER_DETAILS);
             }
             else
             {
-                PopulateDetails(findViewById(R.id.layout_member_details_container),members.get(i));
+                viewHelper.populateMemberDetailsToView(findViewById(R.id.layout_member_details_container), members.get(i));
             }
         }
         catch (Exception ex)
@@ -107,27 +104,46 @@ public class MemberScreenActivity extends FragmentActivity implements AdapterVie
         }
     }
 
-    public static void PopulateDetails(View view_member_container,Member memberToPopulate)
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
+        {
+            case R.id.button_add_member:
+                if(getSupportFragmentManager().findFragmentById(R.id.fragment_member_details) != null)
+                {
+                    Member newMember = new Member();
+                    viewHelper.populateMemberDetailsToView(findViewById(R.id.layout_member_details_container),newMember);
+                    Toast.makeText(this,"Add Member details and click on Save",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Intent intent = new Intent(this,DetailsActivity.class);
+                    Member member = new Member();
+                    intent.putExtra("UID",member.UID);
+                    intent.putExtra("FirstName",member.FirstName);
+                    intent.putExtra("LastName",member.LastName);
+                    intent.putExtra("ContactInfo",member.ContactInfo);
+                    startActivityForResult(intent, SAVE_MEMBER_DETAILS);
+                }
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,Intent data) {
+        if (requestCode == SAVE_MEMBER_DETAILS) {
+            if (resultCode == MemberDetailsFragment.RESULT_SAVED) {
+                // Member details were saved, refresh
+                Reload();
+            }
+        }
+    }
+
+    public void Reload()
     {
-        if(view_member_container == null) return;
-
-        View view = view_member_container.findViewById(R.id.layout_member_details);
-
-        if(view == null || memberToPopulate == null) return;
-
-        TextView memberIdText = (TextView) view.findViewById(R.id.layout_member_uid);
-        if(memberIdText != null) memberIdText.setText(memberToPopulate.UID);
-        Log.d("test",memberIdText.getText().toString());
-
-        EditText firstNameEditor=(EditText) view.findViewById(R.id.edit_member_firstname);
-        if(firstNameEditor != null) firstNameEditor.setText(memberToPopulate.FirstName);
-        Log.d("test",firstNameEditor.getText().toString());
-
-        EditText lastNameEditor=(EditText) view.findViewById(R.id.edit_member_lastname);
-        if(lastNameEditor !=null) lastNameEditor.setText(memberToPopulate.LastName);
-
-        EditText contactEditor=(EditText) view.findViewById(R.id.edit_member_contact);
-        if(contactEditor !=null) contactEditor.setText(memberToPopulate.ContactInfo);
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 
     // Activity that will be called in case screen is not enough to fit both fragments
@@ -135,10 +151,13 @@ public class MemberScreenActivity extends FragmentActivity implements AdapterVie
 
         Member fragment_member;
         MemberDetailsFragment details_fragment;
+        ViewHelper viewHelper;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
+            viewHelper = new ViewHelper();
 
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 // If the screen is now in landscape mode, we can show the
@@ -148,6 +167,8 @@ public class MemberScreenActivity extends FragmentActivity implements AdapterVie
             }
 
             fragment_member = new Member();
+            String uid_string = getIntent().getStringExtra("UID");
+            if(uid_string != null && ! uid_string.isEmpty()) fragment_member.UID=Integer.parseInt(uid_string);
             fragment_member.FirstName=getIntent().getStringExtra("FirstName");
             fragment_member.LastName=getIntent().getStringExtra("LastName");
             fragment_member.ContactInfo=getIntent().getStringExtra("ContactInfo");
@@ -157,7 +178,6 @@ public class MemberScreenActivity extends FragmentActivity implements AdapterVie
 
                 // create fragment
                 details_fragment = new MemberDetailsFragment();
-
                 getSupportFragmentManager().beginTransaction()
                         .add(android.R.id.content, details_fragment).commit();
             }
@@ -167,7 +187,7 @@ public class MemberScreenActivity extends FragmentActivity implements AdapterVie
         protected void onResume()
         {
             super.onResume();
-            PopulateDetails(this.findViewById(R.id.layout_member_details_container),fragment_member);
+            ViewHelper.populateMemberDetailsToView(findViewById(R.id.layout_member_details_container), fragment_member);
         }
     }
 

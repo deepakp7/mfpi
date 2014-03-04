@@ -5,7 +5,7 @@ package com.android.communityfinance.domain;
  */
 public class Member
 {
-    public String UID;
+    public int UID;
     public String FirstName;
     public String LastName;
     public char Sex;

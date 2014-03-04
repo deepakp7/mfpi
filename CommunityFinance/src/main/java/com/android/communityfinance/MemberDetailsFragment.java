@@ -1,5 +1,6 @@
 package com.android.communityfinance;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,12 +21,15 @@ public class MemberDetailsFragment extends Fragment implements View.OnClickListe
     private static final String ARG_PARAM1 = "FirstName";
     private static final String ARG_PARAM2 = "LastName";
     private static final String ARG_PARAM3 = "ContactInfo";
+    public static final int RESULT_SAVED = 0;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private String mParam3;
 
+    DatabaseHandler dbHandler;
+    ViewHelper viewHelper;
     Member member;
     //private OnFragmentInteractionListener mListener;
 
@@ -55,6 +59,10 @@ public class MemberDetailsFragment extends Fragment implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        dbHandler = new DatabaseHandler(getActivity());
+        viewHelper = new ViewHelper();
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -73,44 +81,48 @@ public class MemberDetailsFragment extends Fragment implements View.OnClickListe
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_member_details, container,false);
 
-        //Button b = (Button) view.findViewById(R.id.button_save_member);
-        //b.setOnClickListener(this);
+        if (view != null) {
+            Button saveButton = (Button) view.findViewById(R.id.button_save_member);
+            saveButton.setOnClickListener(this);
+        }
         return view;
     }
 
     @Override
     public void onClick(View view) {
-        switch(view.getId())
-        {
-            case R.id.button_save_member:
-                Member updatedMember = fetchUpdated();
-                // TODO: store in db here
-                break;
-            default:
-                break;
+        try{
+            switch(view.getId())
+            {
+                case R.id.button_save_member:
+                    Member updatedMember = ViewHelper.fetchMemberDetailsFromView(getActivity().findViewById(R.id.layout_member_details_container));
+                    Toast.makeText(getActivity(),"Calling save",Toast.LENGTH_SHORT).show();
+                    dbHandler.addUpdateMember(updatedMember);
+                    FragmentActivity fragActivity = getActivity();
+                    // If both fragments are in same activity, reload activity
+                    // else return result as saved
+                    if(fragActivity instanceof MemberScreenActivity)
+                    {
+                        ((MemberScreenActivity) fragActivity).Reload();
+                    }
+                    else
+                    {
+                        Intent returnIntent = new Intent();
+                        fragActivity.setResult(RESULT_SAVED, returnIntent);
+                        fragActivity.finish();
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
+        catch (Exception ex)
+        {
+            Log.d("Exception",ex.getMessage());
+        }
+
     }
 
-    Member fetchUpdated()
-    {
-        View view = getActivity().findViewById(R.id.layout_member_details);
-        if(view == null) return null;
-        Member updatedMember = new Member();
 
-        TextView memberIdText = (TextView) view.findViewById(R.id.layout_member_uid);
-        if(memberIdText != null) updatedMember.UID=memberIdText.getText().toString();
-
-        EditText firstNameEditor=(EditText) view.findViewById(R.id.edit_member_firstname);
-        if(firstNameEditor != null) updatedMember.FirstName=firstNameEditor.getText().toString();
-
-        EditText lastNameEditor=(EditText) view.findViewById(R.id.edit_member_lastname);
-        if(lastNameEditor !=null) updatedMember.LastName=lastNameEditor.getText().toString();
-
-        EditText contactEditor=(EditText) view.findViewById(R.id.edit_member_contact);
-        if(contactEditor !=null) updatedMember.ContactInfo=contactEditor.getText().toString();
-
-        return updatedMember;
-    }
 
 
 
