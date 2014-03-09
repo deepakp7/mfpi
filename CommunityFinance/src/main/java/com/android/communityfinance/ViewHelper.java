@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.android.communityfinance.domain.Member;
+import com.android.communityfinance.domain.*;
 
 /**
  * Created by shashank on 4/3/14.
@@ -61,5 +61,40 @@ public class ViewHelper {
         if(contactEditor !=null && contactEditor.getText() != null) updatedMember.ContactInfo = contactEditor.getText().toString();
 
         return updatedMember;
+    }
+
+    public static Group fetchGroupDetailsFromView(View viewLayout)
+    {
+        if(viewLayout == null) return null;
+
+        View view = viewLayout.findViewById(R.id.layout_group_details);
+
+        if(view == null) return null;
+
+        Group updatedGroup = new Group();
+
+        TextView memberIdText = (TextView) view.findViewById(R.id.view_group_uid);
+        if(memberIdText != null && memberIdText.getText() != null)
+        {
+            String uid_string = memberIdText.getText().toString();
+            if(uid_string != null && !uid_string.isEmpty())
+                updatedGroup.UID = Integer.parseInt(uid_string);
+        }
+
+        EditText groupNameEditor =(EditText) view.findViewById(R.id.edit_group_name);
+        if(groupNameEditor != null && groupNameEditor.getText()!= null) updatedGroup.GroupName = groupNameEditor.getText().toString();
+
+        EditText groupAddressEditor =(EditText) view.findViewById(R.id.edit_group_address);
+        if(groupAddressEditor !=null && groupAddressEditor.getText()!= null) updatedGroup.Address = groupAddressEditor.getText().toString();
+
+        EditText grpRecurringSavingsEditor =(EditText) view.findViewById(R.id.edit_group_recurring_savings);
+        if(grpRecurringSavingsEditor !=null && grpRecurringSavingsEditor.getText() != null)
+        {
+            String savings = grpRecurringSavingsEditor.getText().toString();
+            if(savings != null && !savings.isEmpty())
+                updatedGroup.RecurringSavings = Integer.parseInt(savings);
+        }
+
+        return updatedGroup;
     }
 }

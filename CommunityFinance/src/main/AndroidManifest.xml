@@ -8,16 +8,24 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.android.communityfinance.MemberScreenActivity"
-            android:label="@string/app_name" >
+            android:name=".Activities.MemberScreenActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".Activities.GroupsGridActivity"
+            android:label="@string/title_activity_groups_grid"
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".MemberScreenActivity$DetailsActivity" />
+        <activity
+            android:name=".Activities.AddGroupActivity"
+            android:label="@string/title_activity_add_group" >
+        </activity>
     </application>
 
 </manifest>

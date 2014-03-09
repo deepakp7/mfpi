@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.communityfinance.Activities.MemberScreenActivity;
+import com.android.communityfinance.database.DatabaseHandler;
 import com.android.communityfinance.domain.Member;
 
 public class MemberDetailsFragment extends Fragment implements View.OnClickListener {

@@ -6,6 +6,7 @@ package com.android.communityfinance.domain;
 public class Member
 {
     public int UID;
+    public int GroupUID;
     public String FirstName;
     public String LastName;
     public char Sex;
