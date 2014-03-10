@@ -1,4 +1,4 @@
-CommunityFinance
-================
+mfpi
+====
 
-Android application for microfinance
+For Community Initiatives
