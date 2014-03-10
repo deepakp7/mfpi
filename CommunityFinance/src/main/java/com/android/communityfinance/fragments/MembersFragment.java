@@ -1,4 +1,4 @@
-package com.android.communityfinance;
+package com.android.communityfinance.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.communityfinance.R;
+import com.android.communityfinance.ViewHelper;
 import com.android.communityfinance.database.DatabaseHandler;
 import com.android.communityfinance.domain.*;
 
@@ -23,6 +25,7 @@ public class MembersFragment extends Fragment implements View.OnClickListener, A
     Activity activity;
     DatabaseHandler dbHandler;
     ArrayList<Member> members;
+    ArrayAdapter membersAdapter;
     View detailsContainer;
     int groupUID;
 
@@ -65,14 +68,25 @@ public class MembersFragment extends Fragment implements View.OnClickListener, A
     @Override
     public void onStart()
     {
+        super.onStart();
         detailsContainer = activity.findViewById(R.id.layout_member_details_container);
         Button addMemberButton = (Button) activity.findViewById(R.id.button_add_member);
         addMemberButton.setOnClickListener(this);
+        Button saveMemberButton = (Button) activity.findViewById(R.id.button_save_member);
+        saveMemberButton.setOnClickListener(this);
 
         ListView lv = (ListView) activity.findViewById(R.id.listview_member_names);
-        ArrayAdapter adapter = new ArrayAdapter(activity,android.R.layout.simple_list_item_1,members);
-        lv.setAdapter(adapter);
+        membersAdapter = new ArrayAdapter(activity,android.R.layout.simple_list_item_1,members);
+        lv.setAdapter(membersAdapter);
         lv.setOnItemClickListener(this);
+    }
+
+    public void Refresh()
+    {
+        members = dbHandler.getAllMembers(groupUID);
+        membersAdapter.clear();
+        membersAdapter.addAll(members);
+        membersAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -81,7 +95,7 @@ public class MembersFragment extends Fragment implements View.OnClickListener, A
         {
             case R.id.button_add_member:
                 Member newMember = new Member();
-                ViewHelper.populateMemberDetailsToView(activity.findViewById(R.id.layout_member_details_container),newMember);
+                ViewHelper.populateMemberDetailsToView(activity.findViewById(R.id.layout_member_details_container), newMember);
                 Toast.makeText(activity, "Add Member details and click on Save", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.button_save_member:
@@ -89,6 +103,7 @@ public class MembersFragment extends Fragment implements View.OnClickListener, A
                 updatedMember.GroupUID = groupUID;
                 dbHandler.addUpdateMember(updatedMember);
                 Toast.makeText(getActivity(),"Details saved",Toast.LENGTH_SHORT).show();
+                Refresh();
                 break;
             default:
                 break;

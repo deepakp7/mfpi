@@ -3,17 +3,17 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.communityfinance.MembersFragment">
+    tools:context="com.android.communityfinance.fragments.MembersFragment"
+    android:id="@+id/layout_member_details_container">
 
-    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_weight="1">
 
@@ -21,20 +21,20 @@
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
                 android:id="@+id/listview_member_names"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center" />
 
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Add New"
                 android:id="@+id/button_add_member"
-                android:layout_alignBottom="@id/listview_member_names"/>
+                android:layout_alignParentBottom="true" />
 
-            </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_weight="1">
 
@@ -42,8 +42,8 @@
 
             <Button android:text="Save" android:id="@+id/button_save_member"
                 android:layout_width="fill_parent" android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/layout_member_details"/>
-        </LinearLayout>
+                android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
 
     </LinearLayout>
 

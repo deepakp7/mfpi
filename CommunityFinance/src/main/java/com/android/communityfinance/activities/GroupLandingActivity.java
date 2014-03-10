@@ -1,6 +1,5 @@
 package com.android.communityfinance.activities;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -8,26 +7,19 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.provider.ContactsContract;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.communityfinance.MembersFragment;
+import com.android.communityfinance.fragments.GroupDetailsFragment;
+import com.android.communityfinance.fragments.MembersFragment;
 import com.android.communityfinance.R;
-import com.android.communityfinance.ViewHelper;
 import com.android.communityfinance.database.DatabaseHandler;
 import com.android.communityfinance.domain.*;
 
@@ -46,6 +38,10 @@ public class GroupLandingActivity extends Activity implements ActionBar.TabListe
     Group group;
     DatabaseHandler db_handler;
 
+    // Three fragments that will go with three tabs
+    MembersFragment fragment_members;
+    GroupDetailsFragment fragment_group_details;
+
     public static final String INTENT_EXTRA_GROUP="GroupUID";
 
     /**
@@ -59,11 +55,19 @@ public class GroupLandingActivity extends Activity implements ActionBar.TabListe
         setContentView(R.layout.activity_group_landing);
         db_handler = new DatabaseHandler(getApplicationContext());
 
+
         int groupUID= getIntent().getIntExtra(INTENT_EXTRA_GROUP,0);
         group = db_handler.getGroup(groupUID);
+        this.setTitle(group.GroupName);
+        fragment_members = MembersFragment.newInstance(groupUID);
+        fragment_group_details = GroupDetailsFragment.newInstance(groupUID);
+
+
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -94,6 +98,8 @@ public class GroupLandingActivity extends Activity implements ActionBar.TabListe
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+
+
     }
 
 
@@ -149,7 +155,9 @@ public class GroupLandingActivity extends Activity implements ActionBar.TabListe
             switch(position)
             {
                 case 0:
-                    return MembersFragment1.newInstance(group.UID);
+                    return fragment_group_details;
+                case 1:
+                    return fragment_members;
             }
             return PlaceholderFragment.newInstance(position + 1);
 
@@ -214,7 +222,7 @@ public class GroupLandingActivity extends Activity implements ActionBar.TabListe
         }
     }
 
-    public static class MembersFragment1 extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener {
+    /*public static class MembersFragment1 extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
         Activity activity;
         DatabaseHandler dbHandler;
@@ -304,5 +312,5 @@ public class GroupLandingActivity extends Activity implements ActionBar.TabListe
             }
         }
 
-    }
+    } */
 }

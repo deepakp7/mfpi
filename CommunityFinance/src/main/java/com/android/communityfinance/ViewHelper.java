@@ -63,11 +63,11 @@ public class ViewHelper {
         return updatedMember;
     }
 
-    public static Group fetchGroupDetailsFromView(View viewLayout)
+    public static Group fetchGroupDetailsFromView(View view_Layout)
     {
-        if(viewLayout == null) return null;
+        if(view_Layout == null) return null;
 
-        View view = viewLayout.findViewById(R.id.layout_group_details);
+        View view = view_Layout.findViewById(R.id.layout_group_details);
 
         if(view == null) return null;
 
@@ -96,5 +96,26 @@ public class ViewHelper {
         }
 
         return updatedGroup;
+    }
+
+    public static void populateGroupDetailsToView(View view_layout,Group groupToPopulate)
+    {
+        if(view_layout == null) return;
+
+        View view = view_layout.findViewById(R.id.layout_group_details);
+
+        if(view == null) return;
+
+        TextView memberIdText = (TextView) view.findViewById(R.id.view_group_uid);
+        if(memberIdText != null ) memberIdText.setText(String.valueOf(groupToPopulate.UID));
+
+        EditText groupNameEditor =(EditText) view.findViewById(R.id.edit_group_name);
+        if(groupNameEditor != null ) groupNameEditor.setText(groupToPopulate.GroupName);
+
+        EditText groupAddressEditor =(EditText) view.findViewById(R.id.edit_group_address);
+        if(groupAddressEditor !=null) groupAddressEditor.setText(groupToPopulate.Address);
+
+        EditText grpRecurringSavingsEditor =(EditText) view.findViewById(R.id.edit_group_recurring_savings);
+        if(grpRecurringSavingsEditor !=null) grpRecurringSavingsEditor.setText(String.valueOf(groupToPopulate.RecurringSavings));
     }
 }
