@@ -1,4 +1,4 @@
-package com.android.communityfinance.Activities;
+package com.android.communityfinance.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ListView;
 
-import com.android.communityfinance.Activities.AddGroupActivity;
 import com.android.communityfinance.R;
 import com.android.communityfinance.database.DatabaseHandler;
 import com.android.communityfinance.domain.Group;
@@ -19,7 +18,7 @@ import com.android.communityfinance.domain.Group;
 import java.util.ArrayList;
 
 
-public class GroupsGridActivity extends Activity {
+public class GroupsGridActivity extends Activity implements AdapterView.OnItemClickListener {
 
     DatabaseHandler db_handler;
     ArrayList<Group> groups;
@@ -33,6 +32,7 @@ public class GroupsGridActivity extends Activity {
         Button addGroupButton =(Button) findViewById(R.id.button_add_group);
 
         db_handler = new DatabaseHandler(getApplicationContext());
+
         groups = new ArrayList<Group>();
 
         if(addGroupButton != null)
@@ -49,7 +49,7 @@ public class GroupsGridActivity extends Activity {
         GridView gv = (GridView) findViewById(R.id.layout_groups_grid);
         adapter_grid = new ArrayAdapter(this,android.R.layout.simple_list_item_1,groups);
         gv.setAdapter(adapter_grid);
-        //lv.setOnItemClickListener(this);
+        gv.setOnItemClickListener(this);
 
     }
 
@@ -85,4 +85,10 @@ public class GroupsGridActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Intent intent = new Intent(getApplicationContext(), GroupLandingActivity.class);
+        intent.putExtra(GroupLandingActivity.INTENT_EXTRA_GROUP,groups.get(i).UID);
+        startActivity(intent);
+    }
 }

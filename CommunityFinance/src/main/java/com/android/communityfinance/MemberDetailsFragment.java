@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.android.communityfinance.Activities.MemberScreenActivity;
+import com.android.communityfinance.activities.MemberScreenActivity;
 import com.android.communityfinance.database.DatabaseHandler;
 import com.android.communityfinance.domain.Member;
 

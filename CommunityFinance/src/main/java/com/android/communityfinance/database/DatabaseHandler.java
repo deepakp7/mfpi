@@ -34,6 +34,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Create Member Table
     private static final String CREATE_MEMBER_TABLE = "Create table "
             + MEMBERS_TABLE_NAME + " ("+ COLUMN_MEMBER_UID +" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+            + COLUMN_MEMBERGROUP_UID + " INTEGER,"
             + COLUMN_MEMBER_FIRSTNAME +" TEXT,"+ COLUMN_MEMBER_LASTNAME + " TEXT,"
             + COLUMN_MEMBER_CONTACT +" TEXT,"
             + COLUMN_MEMBER_IMAGE + " BLOB);";
@@ -77,14 +78,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public void recreateSchema()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + MEMBERS_TABLE_NAME + ";");
+        db.execSQL("DROP TABLE IF EXISTS " + GROUP_TABLE_NAME + ";");
+        // Create tables again
+        db.execSQL(CREATE_MEMBER_TABLE);
+        db.execSQL(CREATE_GROUP_TABLE);
+        db.close();
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {}
 
-    public ArrayList<Member> getAllMembers()
+    public ArrayList<Member> getAllMembers(int groupUID)
     {
         ArrayList<Member> membersList = new ArrayList<Member>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + MEMBERS_TABLE_NAME;
+        String selectQuery = "SELECT  * FROM " + MEMBERS_TABLE_NAME + " Where "+COLUMN_MEMBERGROUP_UID+"="+groupUID+";";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -208,5 +220,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         // return contact list
         return groupList;
+    }
+
+    public Group getGroup(int groupUID)
+    {
+        ArrayList<Group> groupList = new ArrayList<Group>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + GROUP_TABLE_NAME + " Where "+COLUMN_GROUP_UID+"="+groupUID;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        Group group = null;
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            group = new Group();
+            group.UID=Integer.parseInt(cursor.getString(0));
+            group.GroupName=cursor.getString(1);
+            group.Address=cursor.getString(2);
+            //group.FOId=Integer.parseInt(cursor.getString(3));
+            //group.PresidentId = Integer.parseInt(cursor.getString(4));
+            group.RecurringSavings = Integer.parseInt(cursor.getString(5));
+            group.CreatedAt = cursor.getString(6);
+            //group.CreatedBy = Integer.parseInt(cursor.getString(7));
+        }
+
+        return group;
     }
 }

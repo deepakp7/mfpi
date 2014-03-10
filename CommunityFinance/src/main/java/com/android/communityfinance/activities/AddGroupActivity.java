@@ -1,4 +1,4 @@
-package com.android.communityfinance.Activities;
+package com.android.communityfinance.activities;
 
 import android.app.Activity;
 import android.os.Bundle;

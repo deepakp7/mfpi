@@ -1,4 +1,4 @@
-package com.android.communityfinance.Activities;
+package com.android.communityfinance.activities;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,7 @@ public class MemberScreenActivity extends FragmentActivity implements AdapterVie
         setContentView(R.layout.activity_member_screen);
         detailsContainer = findViewById(R.id.layout_member_details_container);
         dbHandler = new DatabaseHandler(this);
-        members = dbHandler.getAllMembers();
+        members = dbHandler.getAllMembers(0);
 
         Button addMemberButton = (Button) findViewById(R.id.button_add_member);
         addMemberButton.setOnClickListener(this);
@@ -50,7 +50,7 @@ public class MemberScreenActivity extends FragmentActivity implements AdapterVie
     @Override protected void onResume()
     {
         super.onResume();
-        members = dbHandler.getAllMembers();
+        members = dbHandler.getAllMembers(0);
         if(members.size() > 0)
             viewHelper.populateMemberDetailsToView(detailsContainer, members.get(0));
     }

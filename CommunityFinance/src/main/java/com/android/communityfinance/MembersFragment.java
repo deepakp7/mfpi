@@ -1,0 +1,110 @@
+package com.android.communityfinance;
+
+import android.app.Activity;
+import android.app.Fragment;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.android.communityfinance.database.DatabaseHandler;
+import com.android.communityfinance.domain.*;
+
+import java.util.ArrayList;
+
+public class MembersFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener {
+
+    Activity activity;
+    DatabaseHandler dbHandler;
+    ArrayList<Member> members;
+    View detailsContainer;
+    int groupUID;
+
+    public static final String ARG_PARAM1 = "Group UID";
+
+    // Always use this factory method to instantiate
+    public static MembersFragment newInstance(int groupUID) {
+        MembersFragment fragment = new MembersFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_PARAM1, groupUID);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public MembersFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            groupUID = getArguments().getInt(ARG_PARAM1);
+        }
+
+        activity = getActivity();
+        dbHandler = new DatabaseHandler(activity.getApplicationContext());
+        members = dbHandler.getAllMembers(groupUID);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_members, container, false);
+    }
+
+    @Override
+    public void onStart()
+    {
+        detailsContainer = activity.findViewById(R.id.layout_member_details_container);
+        Button addMemberButton = (Button) activity.findViewById(R.id.button_add_member);
+        addMemberButton.setOnClickListener(this);
+
+        ListView lv = (ListView) activity.findViewById(R.id.listview_member_names);
+        ArrayAdapter adapter = new ArrayAdapter(activity,android.R.layout.simple_list_item_1,members);
+        lv.setAdapter(adapter);
+        lv.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
+        {
+            case R.id.button_add_member:
+                Member newMember = new Member();
+                ViewHelper.populateMemberDetailsToView(activity.findViewById(R.id.layout_member_details_container),newMember);
+                Toast.makeText(activity, "Add Member details and click on Save", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.button_save_member:
+                Member updatedMember = ViewHelper.fetchMemberDetailsFromView(getActivity().findViewById(R.id.layout_member_details_container));
+                updatedMember.GroupUID = groupUID;
+                dbHandler.addUpdateMember(updatedMember);
+                Toast.makeText(getActivity(),"Details saved",Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        try
+        {
+            ViewHelper.populateMemberDetailsToView(detailsContainer, members.get(i));
+        }
+        catch (Exception ex)
+        {
+            Log.d("Exception", ex.getMessage());
+        }
+    }
+
+}
