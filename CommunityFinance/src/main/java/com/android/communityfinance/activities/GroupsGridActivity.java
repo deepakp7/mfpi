@@ -32,7 +32,7 @@ public class GroupsGridActivity extends Activity implements AdapterView.OnItemCl
         Button addGroupButton =(Button) findViewById(R.id.button_add_group);
 
         db_handler = new DatabaseHandler(getApplicationContext());
-
+        db_handler.deleteAllMembers();
         groups = new ArrayList<Group>();
 
         if(addGroupButton != null)

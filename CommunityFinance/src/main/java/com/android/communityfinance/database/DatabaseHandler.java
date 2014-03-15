@@ -106,9 +106,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do {
                 Member member = new Member();
                 member.UID=(Integer.parseInt(cursor.getString(0)));
-                member.FirstName=cursor.getString(1);
-                member.LastName=cursor.getString(2);
-                member.ContactInfo=cursor.getString(3);
+                member.GroupUID = Integer.parseInt(cursor.getString(1));
+                member.FirstName=cursor.getString(2);
+                member.LastName=cursor.getString(3);
+                member.ContactInfo=cursor.getString(4);
                 // Adding contact to list
                 membersList.add(member);
             } while (cursor.moveToNext());

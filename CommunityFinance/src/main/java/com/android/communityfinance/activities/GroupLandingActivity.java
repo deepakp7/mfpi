@@ -185,8 +185,6 @@ public class GroupLandingActivity extends Activity implements ActionBar.TabListe
     }
 
 
-
-
     /**
      * A placeholder fragment containing a simple view.
      */

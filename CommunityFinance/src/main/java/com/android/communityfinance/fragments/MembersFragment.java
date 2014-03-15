@@ -25,7 +25,7 @@ public class MembersFragment extends Fragment implements View.OnClickListener, A
     Activity activity;
     DatabaseHandler dbHandler;
     ArrayList<Member> members;
-    ArrayAdapter membersAdapter;
+    ArrayAdapter<Member> membersAdapter;
     View detailsContainer;
     int groupUID;
 
@@ -76,7 +76,7 @@ public class MembersFragment extends Fragment implements View.OnClickListener, A
         saveMemberButton.setOnClickListener(this);
 
         ListView lv = (ListView) activity.findViewById(R.id.listview_member_names);
-        membersAdapter = new ArrayAdapter(activity,android.R.layout.simple_list_item_1,members);
+        membersAdapter = new ArrayAdapter<Member>(activity,android.R.layout.simple_list_item_1,members);
         lv.setAdapter(membersAdapter);
         lv.setOnItemClickListener(this);
     }
