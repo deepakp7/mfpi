@@ -16,10 +16,26 @@
 
     </GridView>
 
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button_add_group"
-        android:text="Add New" android:layout_alignParentBottom="true"/>
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_add_group"
+            android:text="Add New" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_syc"
+            android:text="Push to Server"
+            android:layout_alignParentBottom="true" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>

@@ -4,7 +4,7 @@
     <string name="app_name">Community Finance</string>
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_groups_grid">Groups List</string>
+    <string name="title_activity_groups_grid">My Finance Groups</string>
     <string name="title_activity_add_group">AddGroup</string>
     <string name="title_activity_group_landing">Manage Group</string>
     <string name="title_section1">Group Details</string>

@@ -43,8 +43,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String GROUP_TABLE_NAME = "Groups";
 
     // Members Column names
-    private static final String COLUMN_GROUP_UID = "UID";
-    private static final String COLUMN_GROUP_NAME = "GroupName";
+    public static final String COLUMN_GROUP_UID = "UID";
+    public static final String COLUMN_GROUP_NAME = "GroupName";
     private static final String COLUMN_GROUP_ADDRESS = "GroupAddress";
     private static final String COLUMN_GROUP_FO_ID = "FOId";
     private static final String COLUMN_GROUP_PRESIDENT_ID = "PresId";
