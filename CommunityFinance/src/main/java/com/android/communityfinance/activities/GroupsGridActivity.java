@@ -21,20 +21,15 @@ import com.android.communityfinance.domain.Group;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.NameValuePair;
-import org.json.JSONObject;
+import org.json.JSONArray;
 
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class GroupsGridActivity extends Activity implements AdapterView.OnItemClickListener, View.OnClickListener {
@@ -125,35 +120,34 @@ public class GroupsGridActivity extends Activity implements AdapterView.OnItemCl
 
         @Override
         protected String doInBackground(String... strings) {
-            JSONObject groupJSONObject = SyncHelper.getJsonGroup(groups.get(0));
+            JSONArray allGroupsJSON = SyncHelper.GetAllGroupsJSON(groups);
             HttpClient httpclient =new DefaultHttpClient();
-            HttpPost httppost=new HttpPost("http://planindiatest.webatu.com/default.php");
-            responseString = new byte[100];
+            HttpPost httppost=new HttpPost("http://planindiatest.webatu.com/savegroups.php");
+            responseString = new byte[1024];
             try {
-                ArrayList<NameValuePair> nameValuePairs = SyncHelper.getNameValuePairs(groups.get(0));
-                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                //ArrayList<NameValuePair> nameValuePairs = SyncHelper.getNameValuePairs(groups.get(0));
+                //httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                StringEntity s = new StringEntity(allGroupsJSON.toString());
+                s.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                httppost.setEntity(s);
                 HttpResponse response = httpclient.execute(httppost);
 
                 if(response!=null){
                     InputStream in = response.getEntity().getContent();
-                    responseString = new byte[50];
+                    responseString = new byte[1024];
                     in.read(responseString);
                 }
-
-
             } catch (Exception e) {
-                String exc = e.getMessage();
-
                 Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
-            return responseString.toString();
+            return new String(responseString);
         }
 
         @Override
         protected void onPostExecute(String result) {
             //Toast.makeText(getApplicationContext(), requestString,Toast.LENGTH_LONG).show();
-            Toast.makeText(getApplicationContext(), new String(responseString),Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Groups Synchronized with Server",Toast.LENGTH_LONG).show();
         }
     }
 }

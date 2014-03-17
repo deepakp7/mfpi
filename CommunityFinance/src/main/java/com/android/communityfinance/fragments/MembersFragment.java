@@ -2,11 +2,14 @@ package com.android.communityfinance.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -96,12 +99,14 @@ public class MembersFragment extends Fragment implements View.OnClickListener, A
             case R.id.button_add_member:
                 Member newMember = new Member();
                 ViewHelper.populateMemberDetailsToView(activity.findViewById(R.id.layout_member_details_container), newMember);
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                 Toast.makeText(activity, "Add Member details and click on Save", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.button_save_member:
                 Member updatedMember = ViewHelper.fetchMemberDetailsFromView(getActivity().findViewById(R.id.layout_member_details_container));
                 updatedMember.GroupUID = groupUID;
                 dbHandler.addUpdateMember(updatedMember);
+                HideKeypad();
                 Toast.makeText(getActivity(),"Details saved",Toast.LENGTH_SHORT).show();
                 Refresh();
                 break;
@@ -120,6 +125,12 @@ public class MembersFragment extends Fragment implements View.OnClickListener, A
         {
             Log.d("Exception", ex.getMessage());
         }
+    }
+
+    public void HideKeypad()
+    {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
 }

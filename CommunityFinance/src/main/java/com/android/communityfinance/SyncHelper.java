@@ -4,6 +4,7 @@ import com.android.communityfinance.domain.*;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.android.communityfinance.database.DatabaseHandler;
@@ -21,11 +22,23 @@ public class SyncHelper {
         try {
             groupJSON.put(DatabaseHandler.COLUMN_GROUP_UID,group.UID);
             groupJSON.put(DatabaseHandler.COLUMN_GROUP_NAME,group.GroupName);
+            groupJSON.put(DatabaseHandler.COLUMN_GROUP_ADDRESS,group.Address);
+            groupJSON.put(DatabaseHandler.COLUMN_RECURRING_SAVING,group.RecurringSavings);
+            groupJSON.put(DatabaseHandler.COLUMN_CREATED_DATETIME,group.CreatedAt);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         return groupJSON;
+    }
+
+    public static JSONArray GetAllGroupsJSON(ArrayList<Group> groups)
+    {
+        JSONArray jsonArray = new JSONArray();
+        for (Group group : groups) {
+            jsonArray.put(getJsonGroup(group));
+        }
+        return jsonArray;
     }
 
     public static ArrayList<NameValuePair> getNameValuePairs(Group group)

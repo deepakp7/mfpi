@@ -1,6 +1,7 @@
 package com.android.communityfinance;
 
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -21,16 +22,29 @@ public class ViewHelper {
         if(view == null || memberToPopulate == null) return;
 
         TextView memberIdText = (TextView) view.findViewById(R.id.layout_member_uid);
-        if(memberIdText != null) memberIdText.setText(String.valueOf(memberToPopulate.UID));
+        if(memberIdText != null){
+            memberIdText.setText(String.valueOf(memberToPopulate.UID));
+            memberIdText.clearFocus();
+        }
 
         EditText firstNameEditor=(EditText) view.findViewById(R.id.edit_member_firstname);
-        if(firstNameEditor != null) firstNameEditor.setText(memberToPopulate.FirstName);
+        if(firstNameEditor != null){
+            firstNameEditor.setText(memberToPopulate.FirstName);
+            firstNameEditor.clearFocus();
+        }
 
         EditText lastNameEditor=(EditText) view.findViewById(R.id.edit_member_lastname);
-        if(lastNameEditor !=null) lastNameEditor.setText(memberToPopulate.LastName);
+        if(lastNameEditor !=null){
+            lastNameEditor.setText(memberToPopulate.LastName);
+            lastNameEditor.clearFocus();
+        }
 
         EditText contactEditor=(EditText) view.findViewById(R.id.edit_member_contact);
-        if(contactEditor !=null) contactEditor.setText(memberToPopulate.ContactInfo);
+        if(contactEditor !=null){
+            contactEditor.setText(memberToPopulate.ContactInfo);
+            contactEditor.clearFocus();
+        }
+
     }
 
     public static Member fetchMemberDetailsFromView(View viewLayout)
@@ -107,15 +121,27 @@ public class ViewHelper {
         if(view == null) return;
 
         TextView memberIdText = (TextView) view.findViewById(R.id.view_group_uid);
-        if(memberIdText != null ) memberIdText.setText(String.valueOf(groupToPopulate.UID));
+        if(memberIdText != null ){
+            memberIdText.setText(String.valueOf(groupToPopulate.UID));
+            memberIdText.clearFocus();
+        }
 
         EditText groupNameEditor =(EditText) view.findViewById(R.id.edit_group_name);
-        if(groupNameEditor != null ) groupNameEditor.setText(groupToPopulate.GroupName);
+        if(groupNameEditor != null ){
+            groupNameEditor.setText(groupToPopulate.GroupName);
+            groupNameEditor.clearFocus();
+        }
 
         EditText groupAddressEditor =(EditText) view.findViewById(R.id.edit_group_address);
-        if(groupAddressEditor !=null) groupAddressEditor.setText(groupToPopulate.Address);
+        if(groupAddressEditor !=null){
+            groupAddressEditor.setText(groupToPopulate.Address);
+            groupAddressEditor.clearFocus();
+        }
 
         EditText grpRecurringSavingsEditor =(EditText) view.findViewById(R.id.edit_group_recurring_savings);
-        if(grpRecurringSavingsEditor !=null) grpRecurringSavingsEditor.setText(String.valueOf(groupToPopulate.RecurringSavings));
+        if(grpRecurringSavingsEditor !=null){
+            grpRecurringSavingsEditor.setText(String.valueOf(groupToPopulate.RecurringSavings));
+            grpRecurringSavingsEditor.clearFocus();
+        }
     }
 }

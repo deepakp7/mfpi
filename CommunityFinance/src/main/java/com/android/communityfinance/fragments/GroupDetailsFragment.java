@@ -1,12 +1,15 @@
 package com.android.communityfinance.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -58,23 +61,33 @@ public class GroupDetailsFragment extends Fragment implements View.OnClickListen
     {
         super.onStart();
         Button saveGroupButton = (Button) getActivity().findViewById(R.id.button_save_group_details);
-        if(saveGroupButton != null) saveGroupButton.setOnClickListener(this);
+        if(saveGroupButton != null){
+            saveGroupButton.setOnClickListener(this);
+        }
         ViewHelper.populateGroupDetailsToView(getActivity().findViewById(R.id.layout_group_details),group);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     @Override
     public void onClick(View view) {
         switch(view.getId())
         {
-            case R.id.button_save_group:
+            case R.id.button_save_group_details:
                 Group group = ViewHelper.fetchGroupDetailsFromView(getActivity().findViewById(R.id.layout_group_details));
                 if(group != null)
                 {
                     db_handler.addUpdateGroup(group);
                 }
+                HideKeypad();
                 Toast.makeText(getActivity(), "Group Saved", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    public void HideKeypad()
+    {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
 }

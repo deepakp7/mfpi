@@ -7,6 +7,7 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.android.communityfinance.fragments.GroupDetailsFragment;
@@ -220,95 +222,10 @@ public class GroupLandingActivity extends Activity implements ActionBar.TabListe
         }
     }
 
-    /*public static class MembersFragment1 extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener {
+    public void HideKeypad()
+    {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
 
-        Activity activity;
-        DatabaseHandler dbHandler;
-        ArrayList<Member> members;
-        View detailsContainer;
-        int groupUID;
-
-        public static final String ARG_PARAM1 = "Group UID";
-
-        // Always use this factory method to instantiate
-        public static MembersFragment1 newInstance(int groupUID) {
-            MembersFragment1 fragment = new MembersFragment1();
-            Bundle args = new Bundle();
-            args.putInt(ARG_PARAM1, groupUID);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public MembersFragment1() {
-            // Required empty public constructor
-        }
-
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            if (getArguments() != null) {
-                groupUID = getArguments().getInt(ARG_PARAM1);
-            }
-
-            activity = getActivity();
-            dbHandler = new DatabaseHandler(activity.getApplicationContext());
-            members = dbHandler.getAllMembers(groupUID);
-
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            // Inflate the layout for this fragment
-            return inflater.inflate(R.layout.fragment_members, container, false);
-        }
-
-        @Override
-        public void onStart()
-        {
-            super.onStart();
-            detailsContainer = activity.findViewById(R.id.layout_member_details_container);
-            Button addMemberButton = (Button) activity.findViewById(R.id.button_add_member);
-            addMemberButton.setOnClickListener(this);
-
-            ListView lv = (ListView) activity.findViewById(R.id.listview_member_names);
-            ArrayAdapter adapter = new ArrayAdapter(activity,android.R.layout.simple_list_item_1,members);
-            lv.setAdapter(adapter);
-            lv.setOnItemClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            switch (view.getId())
-            {
-                case R.id.button_add_member:
-                    Member newMember = new Member();
-                    ViewHelper.populateMemberDetailsToView(activity.findViewById(R.id.layout_member_details_container), newMember);
-                    Toast.makeText(activity, "Add Member details and click on Save", Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.button_save_member:
-                    Member updatedMember = ViewHelper.fetchMemberDetailsFromView(getActivity().findViewById(R.id.layout_member_details_container));
-                    updatedMember.GroupUID = groupUID;
-                    dbHandler.addUpdateMember(updatedMember);
-                    Toast.makeText(getActivity(),"Details saved",Toast.LENGTH_SHORT).show();
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            try
-            {
-                ViewHelper.populateMemberDetailsToView(detailsContainer, members.get(i));
-            }
-            catch (Exception ex)
-            {
-                Log.d("Exception", ex.getMessage());
-            }
-        }
-
-    } */
 }

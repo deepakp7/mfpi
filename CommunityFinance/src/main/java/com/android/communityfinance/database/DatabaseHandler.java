@@ -45,12 +45,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Members Column names
     public static final String COLUMN_GROUP_UID = "UID";
     public static final String COLUMN_GROUP_NAME = "GroupName";
-    private static final String COLUMN_GROUP_ADDRESS = "GroupAddress";
-    private static final String COLUMN_GROUP_FO_ID = "FOId";
-    private static final String COLUMN_GROUP_PRESIDENT_ID = "PresId";
-    private static final String COLUMN_RECURRING_SAVING = "RecurringSaving";
-    private static final String COLUMN_CREATED_DATETIME = "CreatedAt";
-    private static final String COLUMN_CREATED_BY = "CreatedBy";
+    public static final String COLUMN_GROUP_ADDRESS = "GroupAddress";
+    public static final String COLUMN_GROUP_FO_ID = "FOId";
+    public static final String COLUMN_GROUP_PRESIDENT_ID = "PresId";
+    public static final String COLUMN_RECURRING_SAVING = "RecurringSaving";
+    public static final String COLUMN_CREATED_DATETIME = "CreatedAt";
+    public static final String COLUMN_CREATED_BY = "CreatedBy";
 
     private static final String CREATE_GROUP_TABLE="Create table "+GROUP_TABLE_NAME
             + " (" + COLUMN_GROUP_UID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
@@ -182,6 +182,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         else
         {
             values.put(COLUMN_GROUP_NAME,group.GroupName);
+            values.put(COLUMN_GROUP_ADDRESS,group.Address);
             values.put(COLUMN_GROUP_PRESIDENT_ID,group.PresidentId);
             values.put(COLUMN_GROUP_FO_ID,group.FOId);
             values.put(COLUMN_CREATED_BY,group.CreatedBy);
