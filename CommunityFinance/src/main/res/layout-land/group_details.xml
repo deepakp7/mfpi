@@ -66,6 +66,32 @@
                 android:inputType="textNoSuggestions"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView android:text="Secretary"
+                android:layout_height="wrap_content" android:layout_width="200dp"
+                android:layout_gravity="center"
+                android:padding="10dp"/>
+            <Spinner android:id="@+id/edit_secrartary"
+                android:layout_height="wrap_content" android:layout_width="400dp"
+                android:padding="10dp"
+                android:inputType="textNoSuggestions"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView android:text="Treasurer"
+                android:layout_height="wrap_content" android:layout_width="200dp"
+                android:layout_gravity="center"
+                android:padding="10dp"/>
+            <Spinner android:id="@+id/edit_treasurer"
+                android:layout_height="wrap_content" android:layout_width="400dp"
+                android:padding="10dp"
+                android:inputType="textNoSuggestions"/>
+        </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>
